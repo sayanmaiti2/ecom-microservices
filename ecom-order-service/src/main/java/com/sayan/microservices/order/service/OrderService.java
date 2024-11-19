@@ -1,5 +1,6 @@
 package com.sayan.microservices.order.service;
 
+import com.sayan.microservices.order.client.InventoryClient;
 import com.sayan.microservices.order.dto.OrderRequest;
 import com.sayan.microservices.order.dto.OrderResponse;
 import com.sayan.microservices.order.model.Order;
@@ -15,15 +16,22 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
 
     public String placeOrder(OrderRequest orderRequest) {
-        Order order = new Order();
-        order.setOrderNumber(UUID.randomUUID().toString());
-        order.setSkuCode(orderRequest.skuCode());
-        order.setPrice(orderRequest.price());
-        order.setQuantity(orderRequest.quantity());
+        var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+        if (isProductInStock) {
+            Order order = new Order();
+            order.setOrderNumber(UUID.randomUUID().toString());
+            order.setSkuCode(orderRequest.skuCode());
+            order.setPrice(orderRequest.price());
+            order.setQuantity(orderRequest.quantity());
 
-        return orderRepository.save(order).getOrderNumber();
+            return orderRepository.save(order).getOrderNumber();
+        } else {
+            throw new RuntimeException("Product with skuCode " + orderRequest.skuCode() + " is not in stock");
+        }
+
     }
 
     public List<OrderResponse> getAllOrders() {

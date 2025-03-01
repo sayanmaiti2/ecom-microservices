@@ -1,4 +1,4 @@
-package com.sayan.microservices.inventory;
+package com.sayan.microservices.inventory.service;
 
 import com.sayan.microservices.inventory.repository.InventoryRepository;
 import lombok.RequiredArgsConstructor;

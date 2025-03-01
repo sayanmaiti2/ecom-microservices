@@ -1,6 +1,6 @@
 package com.sayan.microservices.inventory.controller;
 
-import com.sayan.microservices.inventory.InventoryService;
+import com.sayan.microservices.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
